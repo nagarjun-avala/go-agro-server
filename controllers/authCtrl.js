@@ -1,11 +1,11 @@
-const Users = require("../models/userModel");
+const Users = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const authCtrl = {
   register: async (req, res) => {
     try {
-      const { fullName, username, email, password, gender } = req.body;
+      const { firstName,lastName, username, email, password, gender } = req.body;
 
       let newUserName = username.toLowerCase().replace(/ /g, "");
 
@@ -73,6 +73,7 @@ const authCtrl = {
 
       const isMatch = await bcrypt.compare(password, user.password,function(err, result) {
         if (err) throw err;
+        
         if (result) console.log(result);
         return result ? true : false;
     });
