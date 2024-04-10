@@ -22,6 +22,5 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res) => {
-  res.cookie("cookie","cookie-secret")
-  res.send("Hello World!");
+  res.json({message:"Welcome to the server"})
 });
