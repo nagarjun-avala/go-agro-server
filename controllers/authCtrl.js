@@ -22,7 +22,7 @@ const authCtrl = {
           .status(400)
           .json({ msg: "Password must be at least 6 characters." });
 
-      const passwordHash = await bcrypt.hash(password, 12);
+      const passwordHash = await bcrypt.hash(password, 10);
 
       const newUser = new Users({
         fullName,
@@ -60,19 +60,24 @@ const authCtrl = {
     try {
       const { email, password } = req.body;
 
-      console.log({email, password})
+      // console.log("Log In Route:\n",{email, password})
 
-      const user = await Users.findOne({ email }).populate(
-        "followers following",
+      const user = await Users.findOne({ email }).select(
         "-password"
       );
 
-      console.log("Login Route",user)
+      // console.log("Login Route",user)
 
       if (!user)
         return res.status(400).json({ msg: "This email does not exist." });
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.password,function(err, result) {
+        if (err) throw err;
+        if (result) console.log(result);
+        return result ? true : false;
+    });
+      
+      // console.log(isMatch,password,user);
       if (!isMatch)
         return res.status(400).json({ msg: "Password is incorrect." });
 
@@ -94,7 +99,7 @@ const authCtrl = {
         },
       });
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ message: err.message });
     }
   },
 

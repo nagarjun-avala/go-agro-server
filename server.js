@@ -18,7 +18,7 @@ mongoose.connect(URI).then(() => {
 
 const port = process.env.PORT ||3000;
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`=======================================\n Server running on port ${port}\n link: http://localhost:${port}/api`);
 });
 
 app.get("/", (req, res) => {
