@@ -3,20 +3,24 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     profile: {
-      firstName: { type: String, match: [/^[a-zA-Z]+$/, "is invalid"] },
-      lastName: { type: String, match: [/^[a-zA-Z]+$/, "is invalid"] },
-      avatar: { type: String, default: "" },
+      firstName: {
+        type: String,
+        required:[true,"FirstName is required"],
+        trim: true,
+        match: [/^[a-zA-Z]+$/, "First name is invalid"],
+      },
+      lastName: {
+        type: String,
+        trim: true,
+        match: [/^[a-zA-Z]+$/, "Last name is invalid"],
+      },
+      avatar: { type: String, trim: true, default: "" },
     },
-    // fullName: {
-    //   type: String,
-    //   required: [true, "Full Name is required"],
-    //   trim: true,
-    // },
     username: {
       type: String,
-      required: [true, "username is required"],
-      unique: [true, "username should be unique"],
-      match: [/^[a-zA-Z0-9]+$/, "is invalid"],
+      required: [true, "Username is required"],
+      unique: [true, "Username should be unique"],
+      match: [/^[a-zA-Z0-9]+$/, "Username is invalid"],
       trim: true,
       lowercase: true,
     },
@@ -24,14 +28,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter an email"],
       unique: [true, "Email should be unique"],
-      validate: [isEmail, "Please enter a valid email"],
-      match: [/\S+@\S+\.\S+/, "is invalid"],
+      match: [/\S+@\S+\.\S+/, "Email is invalid"],
       trim: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: [true, "Please enter a valid password"],
+      required: [true, "Password is required"],
       minlength: [6, "Minimum password length must be 6 characters"],
     },
     gender: { type: String, default: "male" },
