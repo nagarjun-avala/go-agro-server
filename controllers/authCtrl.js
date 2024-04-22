@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const authCtrl = {
   register: async (req, res) => {
     try {
-      const { firstName,lastName, username, email, password, gender } = req.body;
+      const { firstname, lastname, username, email, password } = req.body;
 
       let newUserName = username.toLowerCase().replace(/ /g, "");
 
@@ -25,11 +25,10 @@ const authCtrl = {
       const passwordHash = await bcrypt.hash(password, 10);
 
       const newUser = new Users({
-        fullName,
+        profile: { firstname, lastname },
         username: newUserName,
         email,
         password: passwordHash,
-        gender,
       });
 
       const access_token = createAccessToken({ id: newUser._id });
@@ -62,22 +61,24 @@ const authCtrl = {
 
       // console.log("Log In Route:\n",{email, password})
 
-      const user = await Users.findOne({ email }).select(
-        "-password"
-      );
+      const user = await Users.findOne({ email }).select("-password");
 
       // console.log("Login Route",user)
 
       if (!user)
         return res.status(400).json({ msg: "This email does not exist." });
 
-      const isMatch = await bcrypt.compare(password, user.password,function(err, result) {
-        if (err) throw err;
-        
-        if (result) console.log(result);
-        return result ? true : false;
-    });
-      
+      const isMatch = await bcrypt.compare(
+        password,
+        user.password,
+        function (err, result) {
+          if (err) throw err;
+
+          if (result) console.log(result);
+          return result ? true : false;
+        }
+      );
+
       // console.log(isMatch,password,user);
       if (!isMatch)
         return res.status(400).json({ msg: "Password is incorrect." });

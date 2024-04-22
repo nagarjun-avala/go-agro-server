@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     profile: {
-      firstName: {
+      firstname: {
         type: String,
         required:[true,"FirstName is required"],
         trim: true,
         match: [/^[a-zA-Z]+$/, "First name is invalid"],
       },
-      lastName: {
+      lastname: {
         type: String,
         trim: true,
         match: [/^[a-zA-Z]+$/, "Last name is invalid"],

@@ -1,18 +1,30 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require('cors');
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
-var corsOptions = {
-  origin: 'http://localhost:3000/',
-  optionsSuccessStatus: 200 
-}
-app.use(cors());
+
+// app.use(cors())
+
+// Define allowed origins
+const allowedOrigins = ['http://localhost:3000'];
+
+// Use CORS middleware with specific origins
+app.use(cors({
+  origin: function (origin, callback) {
+    // Check if the origin is in the allowedOrigins array or if it's undefined (allowing requests from non-browser clients)
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 // Routes
-app.use("/api", require("./routes/authRouter"));
+app.use("/api/auth", require("./routes/authRouter"));
 
 const URI =
   process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/agriculture_db";
